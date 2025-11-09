@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import {
   DEFAULT_DOCKER_ARGS,
   DEFAULT_DOCKER_COMMAND,
@@ -5,6 +6,7 @@ import {
   PROCESS_SUCCESS_EXIT_CODE,
   REDIS_JOB_COMPLETED_FLAG,
   REDIS_JOB_FAILED_FLAG,
+  DOCKER_GHCR_ORIGIN
 } from "../constants.js";
 import { Worker } from "bullmq";
 import { spawn } from "child_process";
@@ -32,7 +34,10 @@ export class CodeExecutionWorker {
   processJob = (job) => {
     return new Promise((resolve, reject) => {
       const { code, runtimeConfig } = job.data;
-      const dockerImage = `${runtimeConfig?.language || 'python'}-runner:latest`;
+      const language = runtimeConfig?.language || 'python'
+      const version = runtimeConfig?.version || '3.10.0'
+      const registry_owner = process.env.GITHUB_USERNAME;
+      const dockerImage = `${DOCKER_GHCR_ORIGIN}/${registry_owner}/${language}-runner:${version}`;
 
       console.log(`Processing job ${job.id}...`);
 

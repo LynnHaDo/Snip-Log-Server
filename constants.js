@@ -28,3 +28,5 @@ export const DEFAULT_DOCKER_COMMAND = 'docker'
 export const FORCEFUL_TERMINATE_PROCESS_FLAG = 'SIGKILL'
 export const PROCESS_SUCCESS_EXIT_CODE = 0
 export const DEFAULT_MAX_CONCURRENT_JOBS_PER_WORKER = 5
+
+export const DOCKER_GHCR_ORIGIN = "ghcr.io"
