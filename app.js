@@ -2,6 +2,13 @@ require('dotenv').config();
 
 import express from 'express'
 import cors from 'cors'
+import { CodeSubmissionQueue } from './constructs/codeSubmissionQueue'
+import { CODE_SUBMISSION_QUEUE_NAME, 
+        POST_CODE_SUBMISSION_ENDPOINT,
+        GET_CODE_SUBMISSION_RESULT_ENDPOINT, 
+        REDIS_JOB_COMPLETED_FLAG, 
+        REDIS_JOB_FAILED_FLAG, 
+        REDIS_JOB_PENDING_FLAG } from './constants'
 
 const app = express() 
 const PORT = process.env.PORT
@@ -11,11 +18,67 @@ const corsOptions = {
     origin: CLIENT_ORIGIN
 }
 
+const redisConnection = {
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT
+}
+
+const codeSubmissionQueue = new CodeSubmissionQueue(
+    CODE_SUBMISSION_QUEUE_NAME, 
+    redisConnection
+)
+
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.post('/run', (req, res) => {
-    // docker container setup
+/**
+ * Endpoint to submit a code run request to the execution queue
+ */
+app.post(POST_CODE_SUBMISSION_ENDPOINT, (req, res) => {
+    const { code, runtimeConfig } = req.body;
+    
+    if (!code || !runtimeConfig) {
+        return res.status(400).json({
+            error: "Code and runtime configs are required."
+        })
+    }
+
+    const job = codeSubmissionQueue.addSubmission(code, runtimeConfig)
+
+    if (!job) {
+        res.status(500).json({ error: 'Failed to submit job to execution queue.' })
+    } 
+    else {
+        res.status(202).json({ jobId: job.id })
+    }
+})
+
+app.get(GET_CODE_SUBMISSION_RESULT_ENDPOINT, async (req, res) => {
+    const { jobId } = req.params;
+
+    const job = codeSubmissionQueue.getJob(jobId)
+
+    if (!job) {
+        return res.status(404).json({ error: "Job not found."})
+    }
+
+    try {
+        const jobState = await job.getState();
+
+        switch (jobState) {
+            case REDIS_JOB_COMPLETED_FLAG:
+                res.status(200).json({ status: REDIS_JOB_COMPLETED_FLAG, output: job.returnValue });
+                break;
+            case REDIS_JOB_FAILED_FLAG:
+                res.status(200).json({ status: REDIS_JOB_FAILED_FLAG, output: job.failedReason });
+                break;
+            default:
+                res.status(200).json({ status: REDIS_JOB_PENDING_FLAG });
+        } 
+    } catch (err) {
+        console.error("Failed to get job status: ", err);
+        res.status(500).json({ error: "Failed to get job status."})
+    }
 })
 
 app.listen(PORT, () => {
