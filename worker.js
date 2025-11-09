@@ -1,14 +1,15 @@
+import 'dotenv/config';
 import {
   REDIS_CONNECTION,
-  CODE_EXECUTION_WORKER_NAME,
+  CODE_SUBMISSION_QUEUE_NAME,
   DEFAULT_MAX_CONCURRENT_JOBS_PER_WORKER,
-} from "./constants";
-import { CodeExecutionWorker } from "./constructs/codeExecutionWorker";
+} from "./constants.js";
+import { CodeExecutionWorker } from "./constructs/codeExecutionWorker.js";
 
-console.log("Worker is starting...")
+console.log("✅ Worker is starting...")
 
 const codeExecutionWorker = new CodeExecutionWorker(
-  CODE_EXECUTION_WORKER_NAME,
+  CODE_SUBMISSION_QUEUE_NAME,
   REDIS_CONNECTION,
   DEFAULT_MAX_CONCURRENT_JOBS_PER_WORKER
 );

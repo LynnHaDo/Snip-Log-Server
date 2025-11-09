@@ -1,5 +1,5 @@
 import { Queue } from "bullmq";
-import { CODE_SUBMISSION_JOB_NAME } from '../constants'
+import { CODE_SUBMISSION_JOB_NAME } from '../constants.js'
 
 export class CodeSubmissionQueue {
     constructor(name, connection) {

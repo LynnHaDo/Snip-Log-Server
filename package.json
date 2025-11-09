@@ -2,16 +2,18 @@
   "name": "snip-log-server",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Linh Do",
   "license": "ISC",
   "description": "",
   "dependencies": {
     "bullmq": "^5.63.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "ioredis": "^5.8.2"
   }

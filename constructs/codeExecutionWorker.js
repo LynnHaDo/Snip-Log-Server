@@ -5,13 +5,13 @@ import {
   PROCESS_SUCCESS_EXIT_CODE,
   REDIS_JOB_COMPLETED_FLAG,
   REDIS_JOB_FAILED_FLAG,
-} from "../constants";
+} from "../constants.js";
 import { Worker } from "bullmq";
 import { spawn } from "child_process";
 
 export class CodeExecutionWorker {
   constructor(name, connection, concurrency) {
-    this.worker = new Worker(name, this.process, {
+    this.worker = new Worker(name, this.processJob, {
       connection: connection,
       concurrency: concurrency,
     });
@@ -29,17 +29,17 @@ export class CodeExecutionWorker {
     });
   }
 
-  process(job) {
+  processJob = (job) => {
     return new Promise((resolve, reject) => {
       const { code, runtimeConfig } = job.data;
-      const dockerImage = `${runtimeConfig.language}-runner:latest`;
+      const dockerImage = `${runtimeConfig?.language || 'python'}-runner:latest`;
 
       console.log(`Processing job ${job.id}...`);
 
       const dockerArgs = [...DEFAULT_DOCKER_ARGS, dockerImage];
       const child = spawn(DEFAULT_DOCKER_COMMAND, dockerArgs);
 
-      let output, error;
+      let output = "", error = "";
 
       const timeout = setTimeout(() => {
         child.kill(FORCEFUL_TERMINATE_PROCESS_FLAG);
@@ -55,12 +55,12 @@ export class CodeExecutionWorker {
 
       // Listen for data from the container's stdout
       child.stdout.on("data", (data) => {
-        output = data.toString();
+        output += data.toString();
       });
 
       // Listen for error from the container's stderr
       child.stderr.on("data", (data) => {
-        error = data.toString();
+        error += data.toString();
       });
 
       // Handle process exit

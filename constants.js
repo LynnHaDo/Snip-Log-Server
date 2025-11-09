@@ -1,7 +1,6 @@
-require('dotenv').config();
+import 'dotenv/config';
 
 export const CODE_SUBMISSION_QUEUE_NAME = "code-submission";
-export const CODE_EXECUTION_WORKER_NAME = "code-execution-worker";
 export const CODE_SUBMISSION_JOB_NAME = "run-code";
 
 export const POST_CODE_SUBMISSION_ENDPOINT = "/submit";
@@ -12,7 +11,7 @@ export const REDIS_JOB_FAILED_FLAG = "failed";
 export const REDIS_JOB_PENDING_FLAG = "pending";
 export const REDIS_CONNECTION = {
     host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT
+    port: parseInt(process.env.REDIS_PORT)
 }
 
 export const CODE_EXECUTION_TIMEOUT_IN_MILLIS = 10000;
