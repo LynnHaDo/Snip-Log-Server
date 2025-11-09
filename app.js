@@ -53,6 +53,9 @@ app.post(POST_CODE_SUBMISSION_ENDPOINT, (req, res) => {
     }
 })
 
+/**
+ * Endpoint to get a job output by id
+ */
 app.get(GET_CODE_SUBMISSION_RESULT_ENDPOINT, async (req, res) => {
     const { jobId } = req.params;
 
