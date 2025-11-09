@@ -8,7 +8,8 @@ import { CODE_SUBMISSION_QUEUE_NAME,
         GET_CODE_SUBMISSION_RESULT_ENDPOINT, 
         REDIS_JOB_COMPLETED_FLAG, 
         REDIS_JOB_FAILED_FLAG, 
-        REDIS_JOB_PENDING_FLAG } from './constants'
+        REDIS_JOB_PENDING_FLAG,
+        REDIS_CONNECTION } from './constants'
 
 const app = express() 
 const PORT = process.env.PORT
@@ -18,14 +19,9 @@ const corsOptions = {
     origin: CLIENT_ORIGIN
 }
 
-const redisConnection = {
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT
-}
-
 const codeSubmissionQueue = new CodeSubmissionQueue(
     CODE_SUBMISSION_QUEUE_NAME, 
-    redisConnection
+    REDIS_CONNECTION
 )
 
 app.use(cors(corsOptions));
@@ -85,5 +81,5 @@ app.get(GET_CODE_SUBMISSION_RESULT_ENDPOINT, async (req, res) => {
 })
 
 app.listen(PORT, () => {
-    console.log('code runner listening on port 8080')
+    console.log('Server listening on port 8080')
 })
