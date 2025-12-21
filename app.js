@@ -89,10 +89,16 @@ app.get(GET_CODE_SUBMISSION_RESULT_ENDPOINT, async (req, res) => {
 
         switch (jobState) {
             case REDIS_JOB_COMPLETED_FLAG:
-                res.status(200).json({ status: REDIS_JOB_COMPLETED_FLAG, output: job.returnValue });
+                const { stdout, stderr, exitCode } = job.returnvalue;
+                res.status(200).json({ 
+                    status: exitCode == 0 ? REDIS_JOB_COMPLETED_FLAG : REDIS_JOB_FAILED_FLAG, 
+                    output: stdout,
+                    error: stderr,
+                    exitCode: exitCode
+                });
                 break;
             case REDIS_JOB_FAILED_FLAG:
-                res.status(200).json({ status: REDIS_JOB_FAILED_FLAG, output: job.failedReason });
+                res.status(200).json({ status: REDIS_JOB_FAILED_FLAG, error: job.failedReason });
                 break;
             default:
                 res.status(200).json({ status: REDIS_JOB_PENDING_FLAG });

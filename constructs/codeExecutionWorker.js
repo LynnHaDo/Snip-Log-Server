@@ -73,15 +73,12 @@ export class CodeExecutionWorker {
       child.on("close", (exitCode) => {
         clearTimeout(timeout);
 
-        if (exitCode == PROCESS_SUCCESS_EXIT_CODE) {
-          console.log(`Job ${job.id} completed successfully.`);
-          resolve(output);
-        } else {
-          console.log(`Job ${job.id} failed. Error: ${error}`);
-          reject(
-            new Error(error || `Execution failed with exit code ${exitCode}`)
-          );
-        }
+        // Returns output and error (if any)
+        resolve({
+            stdout: output.trim(),
+            stderr: error.trim(),
+            exitCode: exitCode
+        })
       });
 
       // If process fails to start
