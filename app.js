@@ -20,7 +20,7 @@ redisTest.ping((err, result) => {
   if (err) {
     console.error("🔴 FAILED TO CONNECT TO REDIS:", err);
   } else {
-    console.log("✅ Successfully pinged Redis:", result); // Should log "PONG"
+    console.log("✅ Successfully pinged Redis:", result);
   }
   redisTest.quit();
 });
@@ -63,7 +63,7 @@ app.post(POST_CODE_SUBMISSION_ENDPOINT, async (req, res) => {
             return res.status(500).json({ error: 'Failed to submit job to execution queue.' });
         } 
         else {
-            res.status(202).json({ jobId: job.id });
+            res.status(200).json({ jobId: job.id });
         }
     } catch (err) {
         // This will catch any unexpected crash
@@ -104,5 +104,5 @@ app.get(GET_CODE_SUBMISSION_RESULT_ENDPOINT, async (req, res) => {
 })
 
 app.listen(PORT, () => {
-    console.log('Server listening on port 8080')
+    console.log(`Server listening on port ${PORT}`)
 })

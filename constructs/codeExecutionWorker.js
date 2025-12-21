@@ -6,7 +6,8 @@ import {
   PROCESS_SUCCESS_EXIT_CODE,
   REDIS_JOB_COMPLETED_FLAG,
   REDIS_JOB_FAILED_FLAG,
-  DOCKER_GHCR_ORIGIN
+  DOCKER_GHCR_ORIGIN,
+  FORCEFUL_TERMINATE_PROCESS_FLAG
 } from "../constants.js";
 import { Worker } from "bullmq";
 import { spawn } from "child_process";
@@ -76,7 +77,7 @@ export class CodeExecutionWorker {
           console.log(`Job ${job.id} completed successfully.`);
           resolve(output);
         } else {
-          console.log(`Job ${job.id} failed.`);
+          console.log(`Job ${job.id} failed. Error: ${error}`);
           reject(
             new Error(error || `Execution failed with exit code ${exitCode}`)
           );
