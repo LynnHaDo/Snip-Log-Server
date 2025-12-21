@@ -36,7 +36,7 @@ export class CodeExecutionWorker {
       const { code, runtimeConfig } = job.data;
       const language = runtimeConfig?.language || 'python'
       const version = runtimeConfig?.version || '3.10.0'
-      const registry_owner = process.env.GITHUB_USERNAME;
+      const registry_owner = process.env.GITHUB_USERNAME.toLowerCase();
       const dockerImage = `${DOCKER_GHCR_ORIGIN}/${registry_owner}/${language}-runner:${version}`;
 
       console.log(`Processing job ${job.id}...`);
