@@ -1,0 +1,16 @@
+# 1. Use an argument for the Python version
+ARG PYTHON_VERSION=3.10-slim
+
+# 2. Use the argument in the FROM instruction
+FROM python:${PYTHON_VERSION}
+
+# 3. Create a secure, non-root user
+RUN useradd -m appuser
+USER appuser
+WORKDIR /app
+
+# 4. Copy the execution script (we'll make this next)
+COPY execute.py .
+
+# 5. Set the entrypoint to run our script
+ENTRYPOINT ["python", "execute.py"]

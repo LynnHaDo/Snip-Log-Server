@@ -1,0 +1,16 @@
+# 1. Use an argument for the Node.js version
+ARG NODE_VERSION=18-alpine
+
+# 2. Use the argument in the FROM instruction
+FROM node:${NODE_VERSION}
+
+# 3. Create a secure, non-root user
+RUN adduser -D appuser
+USER appuser
+WORKDIR /app
+
+# 4. Copy the execution script
+COPY execute.js .
+
+# 5. Set the entrypoint to run the script
+ENTRYPOINT ["node", "execute.js"]
