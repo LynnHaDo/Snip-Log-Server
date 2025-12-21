@@ -26,6 +26,12 @@ jobs:
       # 1. Check out your repository's code
       - name: Check out repository
         uses: actions/checkout@v4
+      
+      # Lowercase the repo owner
+      - name: Lowercase the repo owner name
+        run: echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+        env:
+          OWNER: "${{ github.repository_owner }}"
 
       # 2. Log in to the GitHub Container Registry (GHCR)
       - name: Log in to GitHub Container Registry
@@ -44,7 +50,7 @@ jobs:
           build-args: |
             PYTHON_VERSION=3.10.0-slim
           push: true # Actually push the image
-          tags: ghcr.io/${{ github.repository_owner }}/python-runner:3.10.0 # The full name
+          tags: ghcr.io/${{ env.OWNER_LC }}/python-runner:3.10.0 # The full name
 
       # --- BUILD AND PUSH NODE.JS 18 ---
       - name: Build and push node-runner:18.0.0
@@ -55,6 +61,6 @@ jobs:
           build-args: |
             NODE_VERSION=18-alpine
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/node-runner:18.0.0
+          tags: ghcr.io/${{ env.OWNER_LC }}/node-runner:18.0.0
       
       
