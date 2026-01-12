@@ -3,11 +3,11 @@ import {
   DEFAULT_DOCKER_ARGS,
   DEFAULT_DOCKER_COMMAND,
   CODE_EXECUTION_TIMEOUT_IN_MILLIS,
-  PROCESS_SUCCESS_EXIT_CODE,
   REDIS_JOB_COMPLETED_FLAG,
   REDIS_JOB_FAILED_FLAG,
   DOCKER_GHCR_ORIGIN,
-  FORCEFUL_TERMINATE_PROCESS_FLAG
+  FORCEFUL_TERMINATE_PROCESS_FLAG,
+  DEFAULT_MAX_JOBS_EXECUTION_IN_QUEUE_PER_SECOND
 } from "../constants.js";
 import { Worker } from "bullmq";
 import { spawn } from "child_process";
@@ -17,6 +17,10 @@ export class CodeExecutionWorker {
     this.worker = new Worker(name, this.processJob, {
       connection: connection,
       concurrency: concurrency,
+      limiter: {
+        max: DEFAULT_MAX_JOBS_EXECUTION_IN_QUEUE_PER_SECOND,
+        duration: 1000 // process max 2 jobs per 1000ms
+      }
     });
 
     this.setupWorker();
