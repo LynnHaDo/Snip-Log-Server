@@ -10,11 +10,20 @@ import { CODE_SUBMISSION_QUEUE_NAME,
         REDIS_JOB_PENDING_FLAG,
         REDIS_CONNECTION } from './constants.js'
 import Redis from 'ioredis';
+import RedisStore from 'rate-limit-redis'
+import { CodeSubmissionRateLimiter } from './constructs/codeSubmissionRateLimiter.js';
 
 const app = express() 
 const PORT = parseInt(process.env.SERVER_PORT)
 const CLIENT_ORIGIN = process.env.DEV_CLIENT_ORIGIN
 
+const corsOptions = {
+    origin: CLIENT_ORIGIN
+}
+
+/**
+ * Sets up Redis queue and worker
+ */
 const redisTest = new Redis(REDIS_CONNECTION);
 redisTest.ping((err, result) => {
   if (err) {
@@ -25,15 +34,21 @@ redisTest.ping((err, result) => {
   redisTest.quit();
 });
 
-const corsOptions = {
-    origin: CLIENT_ORIGIN
-}
+const redisStore = new RedisStore({
+    sendCommand: (...args) => redisTest.call(...args)
+})
 
 const codeSubmissionQueue = new CodeSubmissionQueue(
     CODE_SUBMISSION_QUEUE_NAME, 
     REDIS_CONNECTION
 )
 
+const codeSubmissionRateLimiterWrapper = new CodeSubmissionRateLimiter(redisStore)
+const codeSubmissionRateLimiter = codeSubmissionRateLimiterWrapper.getRateLimiter()
+
+/**
+ * Logs request upon receiving
+ */
 app.use((req, res, next) => {
     console.log(`✅ Request received: ${req.method} ${req.path}`);
     next();
@@ -45,7 +60,7 @@ app.use(express.json());
 /**
  * Endpoint to submit a code run request to the execution queue
  */
-app.post(POST_CODE_SUBMISSION_ENDPOINT, async (req, res) => {
+app.post(POST_CODE_SUBMISSION_ENDPOINT, codeSubmissionRateLimiter, async (req, res) => {
     console.log(req.body)
     const { code, runtimeConfig } = req.body;
     
@@ -62,7 +77,7 @@ app.post(POST_CODE_SUBMISSION_ENDPOINT, async (req, res) => {
             // This will now catch errors from addSubmission (like if Redis is down)
             return res.status(500).json({ error: 'Failed to submit job to execution queue.' });
         } 
-        
+
         return res.status(200).json({ jobId: job.id });
     } catch (err) {
         // This will catch any unexpected crash
