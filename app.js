@@ -24,18 +24,17 @@ const corsOptions = {
 /**
  * Sets up Redis queue and worker
  */
-const redisTest = new Redis(REDIS_CONNECTION);
-redisTest.ping((err, result) => {
+const redisClient = new Redis(REDIS_CONNECTION);
+redisClient.ping((err, result) => {
   if (err) {
     console.error("🔴 FAILED TO CONNECT TO REDIS:", err);
   } else {
     console.log("✅ Successfully pinged Redis:", result);
   }
-  redisTest.quit();
 });
 
 const redisStore = new RedisStore({
-    sendCommand: (...args) => redisTest.call(...args)
+    sendCommand: (...args) => redisClient.call(...args)
 })
 
 const codeSubmissionQueue = new CodeSubmissionQueue(

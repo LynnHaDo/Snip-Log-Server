@@ -1,5 +1,5 @@
 import { rateLimit } from 'express-rate-limit'
-import { DEFAULT_MAX_CODE_SUBMISSION_PER_IP_PER_MINUTE } from '../constants'
+import { DEFAULT_MAX_CODE_SUBMISSION_PER_IP_PER_MINUTE } from '../constants.js'
 
 export class CodeSubmissionRateLimiter {
     constructor(redisStore) {
@@ -10,8 +10,7 @@ export class CodeSubmissionRateLimiter {
             standardHeaders: true,
             message: {
                 error: `Each user is limited to ${DEFAULT_MAX_CODE_SUBMISSION_PER_IP_PER_MINUTE} submissions per minute. Please wait.`,
-            },
-            keyGenerator: (req) => req.user?.id || req.ip
+            }
         })
     }
 
