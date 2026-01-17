@@ -25,7 +25,7 @@ export const DEFAULT_DOCKER_ARGS = [
   "-i", // Keep STDIN open to pipe code into it
   "--platform", "linux/amd64" // Specify platform
 ];
-export const DEFAULT_DOCKER_COMMAND = 'docker'
+export const DEFAULT_DOCKER_COMMAND = process.env.DOCKER_BINARY_PATH || 'docker'
 export const FORCEFUL_TERMINATE_PROCESS_FLAG = 'SIGKILL'
 export const PROCESS_SUCCESS_EXIT_CODE = 0
 export const DEFAULT_MAX_CONCURRENT_JOBS_PER_WORKER = 5
