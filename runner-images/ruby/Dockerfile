@@ -3,5 +3,5 @@ FROM ruby:${RUBY_VERSION}
 RUN adduser -D appuser
 USER appuser
 WORKDIR /app
-COPY execute-ruby.sh ./execute.sh
+COPY ./execute-ruby.sh ../execute.sh
 ENTRYPOINT ["sh", "execute.sh"]

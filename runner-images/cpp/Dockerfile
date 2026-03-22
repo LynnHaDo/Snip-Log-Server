@@ -4,5 +4,5 @@ RUN apk add --no-cache g++
 RUN adduser -D appuser
 USER appuser
 WORKDIR /app
-COPY execute-cpp.sh ./execute.sh
+COPY ./execute-cpp.sh ../execute.sh
 ENTRYPOINT ["sh", "execute.sh"]
