@@ -1,0 +1,14 @@
+# 1. Use an argument for the Node.js version to match your YAML
+ARG NODE_VERSION=18-alpine
+FROM node:${NODE_VERSION}
+
+# 2. Create a secure, non-root user (Alpine syntax)
+RUN adduser -D appuser
+USER appuser
+WORKDIR /app
+
+# 3. Copy the shell script and rename it to execute.sh
+COPY execute-javascript.sh ./execute.sh
+
+# 4. Set the entrypoint to run the shell script
+ENTRYPOINT ["sh", "execute.sh"]

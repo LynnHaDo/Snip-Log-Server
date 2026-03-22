@@ -46,7 +46,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./runner-images # Where to find the Dockerfiles
-          file: ./runner-images/Dockerfile.python # Which Dockerfile to use
+          file: ./runner-images/Dockerfile.[python] # Which Dockerfile to use
           build-args: |
             PYTHON_VERSION=3.10.0-slim
           push: true # Actually push the image
@@ -57,10 +57,80 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./runner-images
-          file: ./runner-images/Dockerfile.node
+          file: ./runner-images/Dockerfile.[javascript]
           build-args: |
             NODE_VERSION=18-alpine
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/node-runner:18.0.0
+      
+      # --- BUILD AND PUSH JAVA 21 ---
+      - name: Build and push java-runner
+        uses: docker/build-push-action@v5
+        with:
+          context: ./runner-images
+          file: ./runner-images/Dockerfile.[java]
+          build-args: JAVA_VERSION=21-alpine
+          push: true
+          tags: ghcr.io/${{ env.OWNER_LC }}/java-runner:21.0.0
+
+      # --- BUILD AND PUSH GO 1.22 ---
+      - name: Build and push go-runner
+        uses: docker/build-push-action@v5
+        with:
+          context: ./runner-images
+          file: ./runner-images/Dockerfile.[go]
+          build-args: GO_VERSION=1.22-alpine
+          push: true
+          tags: ghcr.io/${{ env.OWNER_LC }}/go-runner:1.22.0
+
+      # --- BUILD AND PUSH RUST 1.77 ---
+      - name: Build and push rust-runner
+        uses: docker/build-push-action@v5
+        with:
+          context: ./runner-images
+          file: ./runner-images/Dockerfile.[rust]
+          build-args: RUST_VERSION=1.77-alpine
+          push: true
+          tags: ghcr.io/${{ env.OWNER_LC }}/rust-runner:1.77.0
+
+      # --- BUILD AND PUSH C++ 3.19 ---
+      - name: Build and push cpp-runner
+        uses: docker/build-push-action@v5
+        with:
+          context: ./runner-images
+          file: ./runner-images/Dockerfile.[cpp]
+          build-args: ALPINE_VERSION=3.19
+          push: true
+          tags: ghcr.io/${{ env.OWNER_LC }}/cpp-runner:latest
+
+      # --- BUILD AND PUSH C# 8.0 ---
+      - name: Build and push csharp-runner
+        uses: docker/build-push-action@v5
+        with:
+          context: ./runner-images
+          file: ./runner-images/Dockerfile.[csharp]
+          build-args: DOTNET_VERSION=8.0-alpine
+          push: true
+          tags: ghcr.io/${{ env.OWNER_LC }}/csharp-runner:8.0.0
+
+      # --- BUILD AND PUSH RUBY 3.3 ---
+      - name: Build and push ruby-runner
+        uses: docker/build-push-action@v5
+        with:
+          context: ./runner-images
+          file: ./runner-images/Dockerfile.[ruby]
+          build-args: RUBY_VERSION=3.3-alpine
+          push: true
+          tags: ghcr.io/${{ env.OWNER_LC }}/ruby-runner:3.3.0
+
+      # --- BUILD AND PUSH SWIFT 5.9 ---
+      - name: Build and push swift-runner
+        uses: docker/build-push-action@v5
+        with:
+          context: ./runner-images
+          file: ./runner-images/Dockerfile.[swift]
+          build-args: SWIFT_VERSION=5.9-focal
+          push: true
+          tags: ghcr.io/${{ env.OWNER_LC }}/swift-runner:5.9.0
       
       
