@@ -1,5 +1,5 @@
 # 1. Use an argument for the Python version to match your YAML
-ARG PYTHON_VERSION=3.10.0-slim
+ARG PYTHON_VERSION=3.10.0
 FROM python:${PYTHON_VERSION}
 
 # 2. Create a secure, non-root user (Debian syntax)

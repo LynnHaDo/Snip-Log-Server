@@ -16,7 +16,7 @@ for dir in ./runner-images/*/; do
     echo "🔨 Building $lang-runner..."
     echo "--------------------------------"
 
-    "$DOCKER_CMD" build -t ghcr.io/lynnhado/${lang}-runner:$LATEST_SHA "$dir"
+    "$DOCKER_CMD" build -t ghcr.io/lynnhado/${lang}-runner:$LATEST_SHA "$dir" --no-cache
 done
 
 # Update the .env file (macOS requires the '' after -i for sed)

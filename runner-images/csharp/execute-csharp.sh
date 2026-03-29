@@ -9,22 +9,22 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_NOLOGO=1
 
-# Create project WITHOUT trying to reach the network (--no-restore)
-dotnet new console -n App -o . --no-restore > /dev/null 2>&1
+# Copy the pre-warmed project from the image into our writable memory
+cp -r /app/Runner/* /tmp/
 
-# Overwrite the auto-generated Program.cs with the user's incoming code
+# Overwrite the generated Program.cs with the user's incoming code
 cat > Program.cs
 
-# Compilation Phase (build into an 'out' directory)
-dotnet build -c Release -o ./out -nologo
+# Compile the project
+dotnet build -c Release -o ./out --no-restore
 COMPILATION_CODE=$?
 
 if [ $COMPILATION_CODE -ne 0 ]; then
     exit $COMPILATION_CODE
 fi
 
-# 4. Execution Phase
-timeout 10s ./out/App
+# Execute the compiled binary
+timeout 10s ./out/Runner
 EXIT_CODE=$?
 
 if [ $EXIT_CODE -eq 143 ] || [ $EXIT_CODE -eq 124 ]; then
