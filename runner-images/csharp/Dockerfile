@@ -5,5 +5,5 @@ USER appuser
 WORKDIR /app
 RUN dotnet new console -o Runner --no-restore
 WORKDIR /app/Runner
-COPY ./execute-csharp.sh ../execute.sh
+COPY ./execute-csharp.sh ./execute.sh
 ENTRYPOINT ["sh", "execute.sh"]

@@ -8,7 +8,7 @@ USER appuser
 WORKDIR /app
 
 # 3. Copy the shell script and rename it to execute.sh
-COPY ./execute-python.sh ../execute.sh
+COPY ./execute-python.sh ./execute.sh
 
 # 4. Set the entrypoint to run the shell script
 ENTRYPOINT ["sh", "execute.sh"]

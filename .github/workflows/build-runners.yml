@@ -56,10 +56,9 @@ jobs:
       - name: Build and push node-runner:18.0.0
         uses: docker/build-push-action@v5
         with:
-          context: ./runner-images/javascript
-          file: ./runner-images/javascript/Dockerfile
-          build-args: |
-            NODE_VERSION=18-alpine
+          context: ./runner-images/node
+          file: ./runner-images/node/Dockerfile
+          build-args: NODE_VERSION=18-alpine
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/node-runner:18.0.0
       
@@ -133,4 +132,12 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/swift-runner:5.9.0
       
-      
+      # --- BUILD AND PUSH TYPESCRIPT 18 ---
+      - name: Build and push typescript-runner
+        uses: docker/build-push-action@v5
+        with:
+          context: ./runner-images/typescript
+          file: ./runner-images/typescript/Dockerfile
+          build-args: NODE_VERSION=18-alpine
+          push: true
+          tags: ghcr.io/${{ env.OWNER_LC }}/typescript-runner:18.0.0

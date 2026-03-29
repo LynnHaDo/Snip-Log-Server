@@ -40,8 +40,13 @@ export class CodeExecutionWorker {
   processJob = (job) => {
     return new Promise((resolve, reject) => {
       const { code, runtimeConfig } = job.data;
-      const language = runtimeConfig?.language || 'python'
-      const version = runtimeConfig?.version || '3.10.0'
+      const language = runtimeConfig?.language;
+      const version = runtimeConfig?.version;
+
+      if (language == undefined || version == undefined) {
+        reject(new Error(`Request must include language and version (language = ${language}, version = ${version})`));
+      }
+
       const dockerImage = `${DOCKER_GHCR_ORIGIN}/${DOCKER_REGISTRY_OWNER_NAME}/${language}-runner:${version}`;
 
       console.log(`Processing job ${job.id}...`);
