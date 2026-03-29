@@ -34,9 +34,21 @@ DEV_CLIENT_ORIGIN=http://localhost:3000
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
 GITHUB_USERNAME=your_lowercase_username
+DOCKER_BINARY_PATH=path_to_docker_executable
+CURRENT_RUNNER_TAG=latest_sha_tag_of_the_repo
 ```
 
 Note: Always use 127.0.0.1 for the Redis host to avoid IPv6 connection issues (ECONNREFUSED ::1).
+
+### Setting up the environments
+
+Run `sync-env.sh` script with Docker binary path to download the latest code environment:
+
+```
+DOCKER_BINARY_PATH=path_to_docker_executable ./sync-env.sh
+```
+
+Once that's done (all environments are downloaded), continue to next step.
 
 ### Running the Application
 

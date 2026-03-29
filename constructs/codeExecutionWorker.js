@@ -12,7 +12,7 @@ import {
   SUPPORTED_LANGUAGES
 } from "../constants.js";
 import { Worker } from "bullmq";
-import { spawn } from "child_process";
+import { spawn, exec } from "child_process";
 import util from "util"
 
 const execAsync = util.promisify(exec); // promisify exec to use async/await
@@ -41,10 +41,10 @@ export class CodeExecutionWorker {
     const pullPromises = SUPPORTED_LANGUAGES.map(async (lang) => {
         const dockerImage = `${DOCKER_GHCR_ORIGIN}/${DOCKER_REGISTRY_OWNER_NAME}/${lang}-runner:${imageTag}`;
         try {
-            await execAsync(`docker pull ${dockerImage}`);
+            await execAsync(`${process.env.DOCKER_BINARY_PATH} pull ${dockerImage}`);
             console.log(`✅ Ready: ${lang}-runner`)
         } catch (e) {
-            console.error(`⚠️ Failed to pull ${lang}-runner: ${err.message}`)
+            console.error(`⚠️ Failed to pull ${lang}-runner: ${e.message}`)
         }
     })
 

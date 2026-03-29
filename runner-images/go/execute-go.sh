@@ -1,5 +1,10 @@
 #!/bin/sh
 cd /tmp
+
+# Tell Go to use /tmp for its compilation cache to bypass the read-only file system
+export GOCACHE=/tmp/go-cache
+export GOMODCACHE=/tmp/go-mod-cache
+
 cat > main.go
 # Compilation Phase
 go build -o main main.go
