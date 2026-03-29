@@ -1,4 +1,5 @@
 #!/bin/sh
+cd /tmp
 cat > index.js
 timeout 10s node index.js
 EXIT_CODE=$?

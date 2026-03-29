@@ -20,6 +20,8 @@ export const DEFAULT_DOCKER_ARGS = [
   "--rm", // Automatically remove the container when it exits
   "--network=none", // Disable all networking
   "--read-only", // Mount container's filesystem as read-only
+  "--tmpfs", // create a temp fs in memory
+  "/tmp:exec", // Mounted at /tmp
   "--cpus=0.5", // Limit to 50% of a CPU core
   "--memory=100m", // Limit to 100MB of RAM
   "-i", // Keep STDIN open to pipe code into it
