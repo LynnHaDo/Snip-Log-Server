@@ -47,7 +47,8 @@ export class CodeExecutionWorker {
         reject(new Error(`Request must include language and version (language = ${language}, version = ${version})`));
       }
 
-      const dockerImage = `${DOCKER_GHCR_ORIGIN}/${DOCKER_REGISTRY_OWNER_NAME}/${language}-runner:${version}`;
+      const imageTag = process.env.CURRENT_RUNNER_TAG || version;
+      const dockerImage = `${DOCKER_GHCR_ORIGIN}/${DOCKER_REGISTRY_OWNER_NAME}/${language}-runner:${imageTag}`;
 
       console.log(`Processing job ${job.id}...`);
 

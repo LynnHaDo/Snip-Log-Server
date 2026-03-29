@@ -50,7 +50,9 @@ jobs:
           build-args: |
             PYTHON_VERSION=3.10.0-slim
           push: true # Actually push the image
-          tags: ghcr.io/${{ env.OWNER_LC }}/python-runner:3.10.0 # The full name
+          tags: |
+            ghcr.io/${{ env.OWNER_LC }}/python-runner:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/python-runner:3.10.0 # The full name
 
       # --- BUILD AND PUSH NODE.JS 18 ---
       - name: Build and push node-runner:18.0.0
@@ -60,7 +62,9 @@ jobs:
           file: ./runner-images/node/Dockerfile
           build-args: NODE_VERSION=18-alpine
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/node-runner:18.0.0
+          tags: |
+            ghcr.io/${{ env.OWNER_LC }}/node-runner:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/node-runner:18.0.0
       
       # --- BUILD AND PUSH JAVA 21 ---
       - name: Build and push java-runner
@@ -70,7 +74,9 @@ jobs:
           file: ./runner-images/java/Dockerfile
           build-args: JAVA_VERSION=21-alpine
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/java-runner:21.0.0
+          tags: |
+            ghcr.io/${{ env.OWNER_LC }}/java-runner:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/java-runner:21.0.0
 
       # --- BUILD AND PUSH GO 1.22 ---
       - name: Build and push go-runner
@@ -80,7 +86,9 @@ jobs:
           file: ./runner-images/go/Dockerfile
           build-args: GO_VERSION=1.22-alpine
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/go-runner:1.22.0
+          tags: |
+            ghcr.io/${{ env.OWNER_LC }}/go-runner:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/go-runner:1.22.0
 
       # --- BUILD AND PUSH RUST 1.77 ---
       - name: Build and push rust-runner
@@ -90,7 +98,9 @@ jobs:
           file: ./runner-images/rust/Dockerfile
           build-args: RUST_VERSION=1.77-alpine
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/rust-runner:1.77.0
+          tags: |
+            ghcr.io/${{ env.OWNER_LC }}/rust-runner:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/rust-runner:1.77.0
 
       # --- BUILD AND PUSH C++ 3.19 ---
       - name: Build and push cpp-runner
@@ -100,7 +110,9 @@ jobs:
           file: ./runner-images/cpp/Dockerfile
           build-args: ALPINE_VERSION=3.19
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/cpp-runner:latest
+          tags: |
+            ghcr.io/${{ env.OWNER_LC }}/cpp-runner:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/cpp-runner:latest
 
       # --- BUILD AND PUSH C# 8.0 ---
       - name: Build and push csharp-runner
@@ -110,7 +122,9 @@ jobs:
           file: ./runner-images/csharp/Dockerfile
           build-args: DOTNET_VERSION=8.0-alpine
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/csharp-runner:8.0.0
+          tags: |
+            ghcr.io/${{ env.OWNER_LC }}/csharp-runner:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/csharp-runner:8.0.0
 
       # --- BUILD AND PUSH RUBY 3.3 ---
       - name: Build and push ruby-runner
@@ -120,7 +134,9 @@ jobs:
           file: ./runner-images/ruby/Dockerfile
           build-args: RUBY_VERSION=3.3-alpine
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/ruby-runner:3.3.0
+          tags: |
+            ghcr.io/${{ env.OWNER_LC }}/ruby-runner:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/ruby-runner:3.3.0
 
       # --- BUILD AND PUSH SWIFT 5.9 ---
       - name: Build and push swift-runner
@@ -130,7 +146,9 @@ jobs:
           file: ./runner-images/swift/Dockerfile
           build-args: SWIFT_VERSION=5.9-focal
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/swift-runner:5.9.0
+          tags: |
+            ghcr.io/${{ env.OWNER_LC }}/swift-runner:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/swift-runner:5.9.0
       
       # --- BUILD AND PUSH TYPESCRIPT 18 ---
       - name: Build and push typescript-runner
@@ -140,4 +158,6 @@ jobs:
           file: ./runner-images/typescript/Dockerfile
           build-args: NODE_VERSION=18-alpine
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/typescript-runner:18.0.0
+          tags: |
+            ghcr.io/${{ env.OWNER_LC }}/typescript-runner:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/typescript-runner:18.0.0
