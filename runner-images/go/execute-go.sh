@@ -5,6 +5,10 @@ cd /tmp
 export GOCACHE=/tmp/go-cache
 export GOMODCACHE=/tmp/go-mod-cache
 
+# Disable all network proxy/module lookups so it doesn't hang
+export GOPROXY=off
+export GO111MODULE=off
+
 cat > main.go
 # Compilation Phase
 go build -o main main.go

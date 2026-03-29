@@ -1,8 +1,10 @@
 #!/bin/bash
 cd /tmp
+# Explicitly create a cache folder in the writable memory
+mkdir -p /tmp/swift-cache
 cat > main.swift
 # Compilation Phase
-swiftc -O main.swift -o main
+swiftc -module-cache-path /tmp/swift-cache -O main.swift -o main
 COMPILATION_CODE=$?
 
 if [ $COMPILATION_CODE -ne 0 ]; then

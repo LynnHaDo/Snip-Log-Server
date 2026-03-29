@@ -1,8 +1,16 @@
 #!/bin/sh
 cd /tmp
-# Initialize an empty console project
-# We send the setup output to /dev/null so it doesn't pollute the user's terminal
-dotnet new console -n App -o . > /dev/null 2>&1
+# Map ALL .NET hidden CLI folders to the writable /tmp space
+export DOTNET_CLI_HOME=/tmp
+export NUGET_PACKAGES=/tmp/nuget
+
+# Kill all background network, extraction, and telemetry tasks
+export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export DOTNET_NOLOGO=1
+
+# Create project WITHOUT trying to reach the network (--no-restore)
+dotnet new console -n App -o . --no-restore > /dev/null 2>&1
 
 # Overwrite the auto-generated Program.cs with the user's incoming code
 cat > Program.cs
