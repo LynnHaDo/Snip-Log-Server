@@ -1,4 +1,5 @@
 #!/bin/sh
+cd /tmp
 cat > Main.java
 timeout 10s java Main.java
 EXIT_CODE=$?

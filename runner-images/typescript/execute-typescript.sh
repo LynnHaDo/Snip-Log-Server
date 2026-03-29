@@ -1,4 +1,5 @@
 #!/bin/sh
+cd /tmp
 # Read from stdin into index.ts
 cat > index.ts
 

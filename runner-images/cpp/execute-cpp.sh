@@ -1,4 +1,5 @@
 #!/bin/sh
+cd /tmp
 cat > main.cpp
 g++ -O2 main.cpp -o main
 if [ $? -ne 0 ]; then

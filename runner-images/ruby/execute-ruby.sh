@@ -1,4 +1,5 @@
 #!/bin/sh
+cd /tmp
 cat > main.rb
 timeout 10s ruby main.rb
 EXIT_CODE=$?

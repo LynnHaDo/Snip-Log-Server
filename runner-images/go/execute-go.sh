@@ -1,4 +1,5 @@
 #!/bin/sh
+cd /tmp
 cat > main.go
 timeout 10s go run main.go
 EXIT_CODE=$?

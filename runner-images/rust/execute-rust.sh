@@ -1,4 +1,5 @@
 #!/bin/sh
+cd /tmp
 cat > main.rs
 rustc main.rs -o main
 if [ $? -ne 0 ]; then

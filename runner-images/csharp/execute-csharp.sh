@@ -1,4 +1,5 @@
 #!/bin/sh
+cd /tmp
 cat > Program.cs
 timeout 10s dotnet run --no-launch-profile
 EXIT_CODE=$?

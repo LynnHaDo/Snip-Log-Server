@@ -1,4 +1,5 @@
 #!/bin/sh
+cd /tmp
 cat > main.py
 timeout 10s python main.py
 EXIT_CODE=$?
