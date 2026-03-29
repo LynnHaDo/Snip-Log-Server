@@ -52,7 +52,7 @@ jobs:
           push: true # Actually push the image
           tags: |
             ghcr.io/${{ env.OWNER_LC }}/python-runner:${{ github.sha }}
-            ghcr.io/${{ env.OWNER_LC }}/python-runner:3.10.0 # The full name
+            ghcr.io/${{ env.OWNER_LC }}/python-runner:3.10.0
 
       # --- BUILD AND PUSH NODE.JS 18 ---
       - name: Build and push node-runner:18.0.0
