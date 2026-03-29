@@ -8,16 +8,21 @@ import {
   DOCKER_GHCR_ORIGIN,
   DOCKER_REGISTRY_OWNER_NAME,
   FORCEFUL_TERMINATE_PROCESS_FLAG,
-  DEFAULT_MAX_JOBS_EXECUTION_IN_QUEUE_PER_SECOND
+  DEFAULT_MAX_JOBS_EXECUTION_IN_QUEUE_PER_SECOND,
+  SUPPORTED_LANGUAGES
 } from "../constants.js";
 import { Worker } from "bullmq";
 import { spawn } from "child_process";
+import util from "util"
+
+const execAsync = util.promisify(exec); // promisify exec to use async/await
 
 export class CodeExecutionWorker {
   constructor(name, connection, concurrency) {
     this.worker = new Worker(name, this.processJob, {
       connection: connection,
       concurrency: concurrency,
+      autorun: false, // pause pulling jobs
       limiter: {
         max: DEFAULT_MAX_JOBS_EXECUTION_IN_QUEUE_PER_SECOND,
         duration: 1000 // process max 2 jobs per 1000ms
@@ -27,7 +32,27 @@ export class CodeExecutionWorker {
     this.setupWorker();
   }
 
-  setupWorker() {
+  async setupWorker() {
+    // Pre-warm the environment based on the current tag
+    const imageTag = process.env.CURRENT_RUNNER_TAG || "latest";
+
+    console.log(`Pre-pulling ${SUPPORTED_LANGUAGES.length} execution environments...`);
+    // Docker pull all environments concurrently
+    const pullPromises = SUPPORTED_LANGUAGES.map(async (lang) => {
+        const dockerImage = `${DOCKER_GHCR_ORIGIN}/${DOCKER_REGISTRY_OWNER_NAME}/${lang}-runner:${imageTag}`;
+        try {
+            await execAsync(`docker pull ${dockerImage}`);
+            console.log(`✅ Ready: ${lang}-runner`)
+        } catch (e) {
+            console.error(`⚠️ Failed to pull ${lang}-runner: ${err.message}`)
+        }
+    })
+
+    // Wait for all images to finish downloading
+    await Promise.all(pullPromises);
+    console.log("✅ All runner images ready");
+
+    // Attach event listeners
     this.worker.on(REDIS_JOB_COMPLETED_FLAG, (job, result) => {
       console.log(`Job ${job.id} completed. Result length: ${result.length}`);
     });
@@ -35,6 +60,9 @@ export class CodeExecutionWorker {
     this.worker.on(REDIS_JOB_FAILED_FLAG, (job, err) => {
       console.log(`Job ${job.id} failed with error: ${err.message}`);
     });
+
+    console.log("✅ Worker is now accepting jobs from the queue.");
+    this.worker.run();
   }
 
   processJob = (job) => {
